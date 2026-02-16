@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 from scipy.optimize import minimize
 from scipy.stats import t
 
@@ -40,6 +41,7 @@ def calibrate_t_fp(x, weights, initial_df=5, initial_loc=None, initial_scale=Non
     if not initial_scale:
         # using Var(x) = df / (df - 2) * scale^2
         initial_scale = np.sqrt(np.var(x) * (initial_df - 2) / initial_df)
+        initial_scale = np.clip(initial_scale, *scale_bounds)
 
     result = minimize(
         lambda params: -t_fp_log_likelihood(x, df=params[0], weights=weights, loc=params[1], scale=params[2]),
@@ -76,3 +78,9 @@ def calibrate_t_levy_process(daily_log_returns, end_date, num_years, tau_hl_df=2
                             df_bounds=(df_param, df_param))
 
     return params
+
+
+def first_available_calibration_date(data, num_years):
+    """Determine the first date a calibration can be performed given a time series and number of years."""
+    start_date = data.index[0] + pd.DateOffset(years=num_years)
+    return start_date if start_date <= data.index[-1] else None

@@ -4,7 +4,7 @@ from src.data_loading import download_prices
 
 if __name__ == "__main__":
     close_prices = download_prices(
-        tickers=["NVDA", "AAPL", "JPM", "KO"],
+        tickers=["NVDA", "AAPL", "LLY", "JPM", "KO"],
         period="10y",
         end_date="2026-01-30"
     )

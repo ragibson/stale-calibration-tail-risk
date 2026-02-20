@@ -12,8 +12,8 @@ if __name__ == "__main__":
         end_date="2026-01-30"
     )
 
-    # we'll calibrate every 5 business days and projecting out the next period
-    estimated_days = 5
+    # we'll calibrate every 10 business days and project out the next period
+    estimated_days = 10
     calibration_years = 3
 
     # we'll use a simple calculation of historical coverage rather than a statistical test

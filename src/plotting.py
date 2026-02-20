@@ -4,28 +4,43 @@ import numpy as np
 from scipy.stats import t
 
 
-def plot_profile_and_recent_price(historical_prices, calibration_date, profiles,
-                                  recent_price_length=252 // 12):
+def plot_profile_and_recent_price(historical_prices, calibration_date, profiles, title,
+                                  recent_price_length=252 // 12,
+                                  profile_labels=("Low Profile (5%)", "High Profile (95%)"),
+                                  hide_prices_after_calibration=False):
     """
     Plots historical prices along with low and high profile projections from the calibration date.
 
     :param historical_prices: Series of historical prices indexed by date
     :param calibration_date: Calibration date to plot profiles from
     :param profiles: Tuple of (low_profile, high_profile) price projections
+    :param title: Plot title
     :param recent_price_length: Number of recent prices to plot for context
+    :param profile_labels: Labels to use for the low and high profiles in the legend
+    :param hide_prices_after_calibration: If True, only plot historical prices up to the calibration date
     """
     low_profile, high_profile = profiles
 
     # trim prices to a window around the calibration date for visualization purposes
     calibration_date_index = historical_prices.index.get_loc(calibration_date)
-    dates_to_plot = historical_prices.index[calibration_date_index - recent_price_length
-                                            :calibration_date_index + len(low_profile)]
+    if hide_prices_after_calibration:
+        # further trim any prices after the calibration date
+        dates_to_plot = historical_prices.index[calibration_date_index - recent_price_length:calibration_date_index + 1]
+    else:
+        dates_to_plot = historical_prices.index[calibration_date_index - recent_price_length
+                                                :calibration_date_index + len(low_profile)]
+
     plt.plot(dates_to_plot, historical_prices[dates_to_plot], label="Historical Price")
 
     profile_dates = historical_prices.index[calibration_date_index:calibration_date_index + len(low_profile)]
+    plt.plot(profile_dates, high_profile, label=profile_labels[1], linestyle='--')
+    plt.plot(profile_dates, low_profile, label=profile_labels[0], linestyle='--')
 
-    plt.plot(profile_dates, low_profile, label="Low Profile", linestyle='--')
-    plt.plot(profile_dates, high_profile, label="High Profile", linestyle='--')
+    plt.title(title)
+    plt.gcf().autofmt_xdate()
+    plt.gca().yaxis.set_major_formatter(mtick.StrMethodFormatter("${x:,.0f}"))
+    plt.ylabel("Price")
+    plt.xlabel("Date")
     plt.legend()
     plt.tight_layout()
 

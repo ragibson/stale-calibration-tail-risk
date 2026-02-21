@@ -16,6 +16,10 @@ if __name__ == "__main__":
     estimated_days = 10
     calibration_years = 3
 
+    tau_hl_df = 252
+    tau_hl_sigma = 252 // 4
+    print(f"For choice of tau_hl_df={tau_hl_df} and tau_hl_sigma={tau_hl_sigma}, we have:")
+
     # we'll use a simple calculation of historical coverage rather than a statistical test
     all_num_samples = 0
     all_num_correct = 0
@@ -31,7 +35,7 @@ if __name__ == "__main__":
         num_correct = 0
         for calibration_date in tqdm(calibration_dates):
             params = calibrate_t_levy_process(daily_log_returns, end_date=calibration_date, num_years=calibration_years,
-                                              tau_hl_df=252, tau_hl_sigma=252 // 4)
+                                              tau_hl_df=tau_hl_df, tau_hl_sigma=tau_hl_sigma)
 
             # Monte Carlo simulation to estimate the left and right 95% confidence interval (this particular process
             # could actually be modeled via Fourier transform, but we resort to Monte Carlo for simplicity/generality)
@@ -52,7 +56,7 @@ if __name__ == "__main__":
             if process_confidence_interval[0] <= next_1week_price <= process_confidence_interval[1]:
                 num_correct += 1
 
-        print(f"Final '{ticker}' coverage: {num_correct / num_samples:.2%} over {num_samples} samples")
+        print(f"Final '{ticker}' coverage of 5% - 95%: {num_correct / num_samples:.2%} over {num_samples} samples")
         all_num_samples += num_samples
         all_num_correct += num_correct
 

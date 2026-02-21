@@ -1,6 +1,5 @@
 import numpy as np
 from scipy.stats import binom
-from tqdm import trange
 
 from src.simulation import simulate_t_levy_process, tail_risk_estimate
 
@@ -35,7 +34,8 @@ def stale_calibration_comparison(stale_t_params, new_t_params, num_days, num_sam
     :return: List of p-values for all backtesting trails
     """
     # simulate tail risk estimate from stale calibration
-    # for stability, we use a much larger number of paths for this estimate than the trial samples
+    # for stability, we use a much larger number of paths for this estimate than the trial samples and fix the seed
+    np.random.seed(0)
     stale_tail_risk = tail_risk_estimate(
         simulation_paths=simulate_t_levy_process(num_days=num_days, num_paths=num_paths * 100, S0=100,
                                                  df=stale_t_params['df'], mu=stale_t_params['mu'],
@@ -44,7 +44,7 @@ def stale_calibration_comparison(stale_t_params, new_t_params, num_days, num_sam
     )
 
     p_values = []
-    for _ in trange(num_trials, desc="Stale calibration backtesting trials"):
+    for _ in range(num_trials):
         new_calibration_samples = simulate_t_levy_process(
             num_days=num_days, num_paths=num_samples_per_trial, S0=100,
             df=new_t_params['df'], mu=stale_t_params['mu'], sigma=stale_t_params['sigma']

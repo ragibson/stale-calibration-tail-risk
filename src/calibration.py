@@ -67,20 +67,21 @@ def calibrate_t_levy_process(daily_log_returns, end_date, num_years, tau_hl_df=2
     :return: Calibrated degrees of freedom, mu (location), and sigma (scale) parameters of the t-distribution
     """
     calibration_period = truncate_series_to_date_range(daily_log_returns, end_date, num_years)
+    calibration_values = calibration_period.values.flatten()
 
     # first, calibrate the degrees of freedom
     if tau_hl_df is not None:
         df_weights = exponential_decay_probabilities(tau_hl=tau_hl_df, t_bar=len(calibration_period))
     else:
         df_weights = 1.0 / np.ones(len(calibration_period))
-    df_param = calibrate_t_fp(calibration_period.values, weights=df_weights)["df"]
+    df_param = calibrate_t_fp(calibration_values, weights=df_weights)["df"]
 
     # then, calibrate the location and scale parameters
     if tau_hl_sigma is not None:
         sigma_weights = exponential_decay_probabilities(tau_hl=tau_hl_sigma, t_bar=len(calibration_period))
     else:
         sigma_weights = 1.0 / np.ones(len(calibration_period))
-    params = calibrate_t_fp(calibration_period.values, weights=sigma_weights, initial_df=df_param,
+    params = calibrate_t_fp(calibration_values, weights=sigma_weights, initial_df=df_param,
                             df_bounds=(df_param, df_param))
 
     return params

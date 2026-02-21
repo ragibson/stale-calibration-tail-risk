@@ -33,7 +33,8 @@ if __name__ == "__main__":
             params = calibrate_t_levy_process(daily_log_returns, end_date=calibration_date, num_years=calibration_years,
                                               tau_hl_df=252, tau_hl_sigma=252 // 4)
 
-            # Monte Carlo simulation to estimate the left and right 95% confidence interval
+            # Monte Carlo simulation to estimate the left and right 95% confidence interval (this particular process
+            # could actually be modeled via Fourier transform, but we resort to Monte Carlo for simplicity/generality)
             simulation_paths = simulate_t_levy_process(num_days=estimated_days, num_paths=10_000,
                                                        S0=close_prices.loc[calibration_date],
                                                        df=params['df'], mu=params['mu'], sigma=params['sigma'])
@@ -55,4 +56,5 @@ if __name__ == "__main__":
         all_num_samples += num_samples
         all_num_correct += num_correct
 
+    # just a simple calculation of overall coverage, not a formal statistical test
     print(f"Overall coverage: {all_num_correct / all_num_samples:.2%} over {all_num_samples} samples")

@@ -67,7 +67,7 @@ def example_t_levy_process_profiles():
 
     plt.figure()
     plot_profile_and_recent_price(close_prices, calibration_date, simulated_profiles,
-                                  title="Example NVDA projection from\ncalibrated $t$-Levy process",
+                                  title="Example NVDA projection from\n 3-year calibrated $t$-Levy process",
                                   recent_price_length=252 // 2, hide_prices_after_calibration=True)
 
 
@@ -207,13 +207,18 @@ def example_stale_calibration_degradation():
     plt.tight_layout()
 
 
-if __name__ == "__main__":
+def main():
     presentation_font_setup()
 
     for plot_function in [example_t_fit_to_NVDA, example_t_levy_process_profiles,
                           example_exponential_decay_probabilities, example_parameter_stability,
+                          example_stale_calibration_backtest_p_values,
                           example_stale_calibration_degradation]:
         print(f"Running {plot_function.__name__}...")
         plt.close()
         plot_function()
         plt.savefig(f"{plot_function.__name__}.png")
+
+
+if __name__ == "__main__":
+    main()

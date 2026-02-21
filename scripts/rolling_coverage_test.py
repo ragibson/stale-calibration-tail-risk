@@ -5,7 +5,8 @@ from src.calibration import calibrate_t_levy_process, first_available_calibratio
 from src.data_loading import download_prices
 from src.simulation import simulate_t_levy_process, tail_risk_estimate
 
-if __name__ == "__main__":
+
+def main():
     all_close_prices = download_prices(
         tickers=["NVDA", "AAPL", "LLY", "JPM", "KO"],
         period="10y",
@@ -62,3 +63,7 @@ if __name__ == "__main__":
 
     # just a simple calculation of overall coverage, not a formal statistical test
     print(f"Overall coverage: {all_num_correct / all_num_samples:.2%} over {all_num_samples} samples")
+
+
+if __name__ == "__main__":
+    main()

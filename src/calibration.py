@@ -48,7 +48,7 @@ def calibrate_t_fp(x, weights, initial_df=5, initial_loc=None, initial_scale=Non
         x0=[initial_df, initial_loc, initial_scale],
         bounds=[df_bounds, (None, None), scale_bounds],
         method='Powell',
-        tol=1e-8
+        tol=1e-8, options={'maxiter': 10_000}
     )
     if not result.success:
         raise ValueError(f"Optimization failed: {result.message}")

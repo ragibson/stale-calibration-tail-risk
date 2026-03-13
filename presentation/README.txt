@@ -1,1 +1,1 @@
-Placeholder for presentation content
+This directory contains the presentation materials, namely the slides as a PDF.

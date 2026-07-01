@@ -12,3 +12,6 @@ calibration instead of a freshly updated one.
 * [presentation/](presentation/) contains slides for the presentation itself
 * [src/](src/) contains the Python implementation
 * [scripts/](scripts/)  contains scripts that demonstrate model usage and generate the presentation content
+
+A written version of this presentation is available at https://ryanagibson.com/posts/stale-calibration-backtest/ and an
+informal ~10-minute version of this discussion is available at https://www.youtube.com/watch?v=pU5SRbmKAOg.

@@ -1,1 +1,0 @@
-This directory contains the presentation materials, namely the slides as a PDF.
